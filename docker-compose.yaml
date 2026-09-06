@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # 對應 Dockerfile build 出來的正式環境模擬 (Production Mode)
+  local-game:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: local-game
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  # 對應開發用的熱加載/即時掛載模式 (Dev Mode)
+  local-game-dev:
+    image: nginx:alpine
+    container_name: local-game-dev
+    ports:
+      - "8081:80"  # 避開 8080 埠，讓你可同時運行兩個容器對比
+    volumes:
+      - .:/usr/share/nginx/html
+    restart: unless-stopped
